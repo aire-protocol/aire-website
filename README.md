@@ -17,7 +17,7 @@ python3 -m http.server 8000
 
 GitHub Pages serves `main` automatically once Pages is enabled in repo settings. The `CNAME` file pins the apex domain (`aire.fyi`).
 
-### One-time launch checklist
+### One-time go-live checklist
 
 1. Register `aire.fyi` at a registrar (Porkbun, Cloudflare, Namecheap).
 2. Configure DNS at the registrar:
