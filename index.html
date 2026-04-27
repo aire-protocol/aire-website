@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIRE — the QUIC-native agent protocol</title>
+<meta name="description" content="AIRE (Agent Interchange Runtime Envelope) is a QUIC-native protocol for agent-to-agent communication. Open spec. Apache 2.0.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="AIRE — the QUIC-native agent protocol">
+<meta property="og:description" content="A wire protocol for agent-to-agent communication. Built for migration, multiplexed fan-out, semantic cancellation, and budget-aware backpressure.">
+<meta property="og:url" content="https://aire.fyi">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AIRE — the QUIC-native agent protocol">
+<meta name="twitter:description" content="A wire protocol for agent-to-agent communication. Built for migration, multiplexed fan-out, semantic cancellation, and budget-aware backpressure.">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">AIRE</div>
+  <nav>
+    <a href="#bet">The bet</a>
+    <a href="#design">Design</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="https://github.com/aire-protocol">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero">
+  <h1>The QUIC-native agent protocol.</h1>
+  <p class="lede">AIRE — Agent Interchange Runtime Envelope — is a wire protocol for agent-to-agent communication. Open spec. Apache 2.0. Built for migration, multiplexed fan-out, semantic cancellation, and budget-aware backpressure.</p>
+  <div class="meta">
+    <span>Status: draft v0.1</span>
+    <span>License: Apache 2.0</span>
+    <span>Reference impl: Go</span>
+  </div>
+</section>
+
+<section id="bet">
+  <h2>The bet</h2>
+  <p>The agent era is moving across HTTP. HTTP is wrong for agents — wrong for streaming, wrong for fan-out, wrong for migration, wrong for identity, wrong for cancellation, wrong for cost-aware backpressure.</p>
+  <p>The right altitude isn't a new layer-4 protocol. QUIC already fixed the transport. The opening is <em>agent-native semantics on top</em> — and that's what AIRE is.</p>
+</section>
+
+<section id="problem">
+  <h2>The problem with HTTP for agents</h2>
+  <p>Today's agent protocols — MCP, A2A, and the various HTTP-based ACPs — all live on HTTP. That makes adoption easy. It also ceilings adoption hard.</p>
+  <ul>
+    <li><strong>Host-centric, not agent-centric.</strong> HTTP's connection model bakes in the assumption that the host is the endpoint. Agents migrate; hosts don't matter.</li>
+    <li><strong>Head-of-line blocking on fan-out.</strong> One byte stream, many logical streams stalled by one packet loss.</li>
+    <li><strong>Handshake tax.</strong> 2–3 RTT before the first useful byte. At fan-out scale, this dominates wall-clock.</li>
+    <li><strong>No semantic cancellation.</strong> HTTP cancel is connection-level. Agents need to abort one operation among many.</li>
+    <li><strong>Wrong backpressure model.</strong> HTTP flow control is bytes-of-buffer. The actual constraint for agents is tokens-of-context or dollars-of-budget.</li>
+    <li><strong>No protocol-level identity.</strong> Auth is bolted on via OAuth, downgraded constantly, replayable.</li>
+    <li><strong>No resumability.</strong> A 5-minute generation dies on a 1-second network blip.</li>
+  </ul>
+</section>
+
+<section id="design">
+  <h2>The design</h2>
+  <dl class="design">
+    <dt>Transport</dt>
+    <dd>QUIC (RFC 9000). Connection-ID-based migration, multiplexed streams, 0-RTT, built-in TLS, escapes middlebox ossification.</dd>
+
+    <dt>Frames</dt>
+    <dd>Typed agent verbs: <code>HELLO</code>, <code>CAPABILITY</code>, <code>INVOKE</code>, <code>STREAM</code>, <code>CANCEL</code>, <code>BUDGET</code>, <code>DELEGATE</code>, <code>ERROR</code>, <code>GOODBYE</code>.</dd>
+
+    <dt>Identity</dt>
+    <dd>DID-based, signed, bound to streams — not connections. One connection can carry operations on behalf of many distinct agent identities.</dd>
+
+    <dt>Addressing</dt>
+    <dd><code>aire://node-id/agent-id/operation</code></dd>
+
+    <dt>Backpressure</dt>
+    <dd>Semantic. Tokens and dollars are first-class flow-control units, not bytes.</dd>
+
+    <dt>Cancellation</dt>
+    <dd>Per-operation, propagating to delegated sub-calls.</dd>
+
+    <dt>Resumability</dt>
+    <dd>Logical-operation resume across new connections.</dd>
+  </dl>
+</section>
+
+<section id="compared">
+  <h2>Compared</h2>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th></th>
+        <th>Transport</th>
+        <th>Migration</th>
+        <th>Stream HOL</th>
+        <th>Cancel</th>
+        <th>Budget BP</th>
+        <th>Identity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>MCP</td><td>stdio / Streamable HTTP</td><td>—</td><td>inherits HTTP</td><td>crude</td><td>—</td><td>OAuth (bolted)</td></tr>
+      <tr><td>A2A</td><td>HTTP + SSE</td><td>—</td><td>inherits HTTP/2</td><td>HTTP-cancel</td><td>—</td><td>OAuth (bolted)</td></tr>
+      <tr><td>HTTP-ACPs</td><td>HTTP</td><td>—</td><td>inherits HTTP</td><td>—</td><td>—</td><td>bolted</td></tr>
+      <tr class="highlight"><td><strong>AIRE</strong></td><td><strong>QUIC</strong></td><td>✓</td><td>✓</td><td>✓ semantic</td><td>✓ tokens + $</td><td>✓ DID per stream</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="roadmap">
+  <h2>Roadmap</h2>
+  <ol class="roadmap">
+    <li><strong>v0.1</strong> — frame types, handshake, basic semantics <em>(in progress)</em></li>
+    <li><strong>v0.2</strong> — capability negotiation, identity model</li>
+    <li><strong>v0.3</strong> — budget / cancel / delegate semantics</li>
+    <li><strong>v0.4</strong> — resumability, multipath</li>
+    <li><strong>v1.0</strong> — frozen wire format, foundation donation</li>
+  </ol>
+</section>
+
+<section id="governance">
+  <h2>Governance</h2>
+  <p>Currently led by a BDFL. Path to a neutral foundation (Linux Foundation / IETF) once the spec is proven and adopted. <a href="https://github.com/aire-protocol/aire-spec/blob/main/GOVERNANCE.md">Read the governance doc.</a></p>
+</section>
+
+<section id="get-involved">
+  <h2>Get involved</h2>
+  <ul class="links">
+    <li><a href="https://github.com/aire-protocol/aire-spec">Spec repository</a> — read the draft, file issues, send PRs</li>
+    <li><a href="https://github.com/aire-protocol/aire-go">Go reference implementation</a></li>
+    <li><a href="https://github.com/aire-protocol/aire-spec/blob/main/SPEC.md">Latest spec draft</a></li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <p>AIRE is open-source under <a href="https://github.com/aire-protocol/aire-spec/blob/main/LICENSE">Apache 2.0</a>.</p>
+  <p class="dim">aire.fyi</p>
+</footer>
+
+</body>
+</html>

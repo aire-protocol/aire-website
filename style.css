@@ -1,0 +1,237 @@
+:root {
+  --bg: #fafaf7;
+  --fg: #1a1a1a;
+  --dim: #6a6a6a;
+  --accent: #a8431d;
+  --rule: #e2e0d9;
+  --code-bg: #f1efe8;
+  --highlight-bg: #fdf6f1;
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 16px; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code, pre, .mono {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+}
+
+header {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  font-size: 1rem;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+nav a {
+  margin-left: 1.25rem;
+  color: var(--fg);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+nav a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+section {
+  margin: 4rem 0;
+}
+
+.hero {
+  margin: 4rem 0 5rem;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  margin: 0 0 1.5rem;
+}
+
+.lede {
+  font-size: 1.15rem;
+  line-height: 1.55;
+  color: var(--fg);
+  margin: 0 0 2rem;
+  max-width: 60ch;
+}
+
+.meta {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+  color: var(--dim);
+}
+
+.meta span {
+  margin-right: 1.5rem;
+  display: inline-block;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0 0 1rem;
+  max-width: 65ch;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+ul, ol {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+  max-width: 65ch;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+.design {
+  margin: 0;
+}
+
+.design dt {
+  font-weight: 600;
+  margin-top: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.design dd {
+  margin: 0.25rem 0 0 0;
+  color: var(--dim);
+  max-width: 65ch;
+}
+
+.design dd code {
+  background: var(--code-bg);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.88rem;
+  color: var(--fg);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 1rem -0.25rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+}
+
+th {
+  font-weight: 600;
+  border-bottom: 2px solid var(--rule);
+}
+
+tr.highlight td {
+  background: var(--highlight-bg);
+}
+
+.roadmap {
+  list-style: none;
+  padding-left: 0;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.95rem;
+}
+
+.roadmap li {
+  margin-bottom: 0.6rem;
+}
+
+.roadmap em {
+  color: var(--dim);
+  font-style: normal;
+  font-size: 0.85rem;
+}
+
+.links {
+  list-style: none;
+  padding-left: 0;
+}
+
+footer {
+  max-width: 760px;
+  margin: 4rem auto 2rem;
+  padding: 2rem 1.5rem 1rem;
+  border-top: 1px solid var(--rule);
+  font-size: 0.85rem;
+  color: var(--dim);
+}
+
+footer p {
+  margin: 0 0 0.4rem;
+}
+
+.dim {
+  color: var(--dim);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@media (max-width: 600px) {
+  .hero h1 { font-size: 1.85rem; }
+  .lede { font-size: 1.05rem; }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  nav a { margin-left: 0; margin-right: 1.25rem; }
+  .meta span { display: block; margin-bottom: 0.25rem; }
+  table { font-size: 0.8rem; }
+  th, td { padding: 0.4rem 0.5rem; }
+}
