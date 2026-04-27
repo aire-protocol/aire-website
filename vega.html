@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIRE &amp; Vega — relationship</title>
+<meta name="description" content="AIRE is an open protocol. Vega is one runtime that happens to speak it. The relationship, the decoupling rules, and what it means for you.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="AIRE &amp; Vega">
+<meta property="og:description" content="AIRE is an open protocol. Vega is one runtime that happens to speak it. The relationship explained.">
+<meta property="og:url" content="https://aire.fyi/vega">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AIRE &amp; Vega">
+<meta name="twitter:description" content="AIRE is an open protocol. Vega is one runtime that happens to speak it.">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand"><a href="/">AIRE</a></div>
+  <nav>
+    <a href="/#bet">The bet</a>
+    <a href="/#design">Design</a>
+    <a href="/#roadmap">Roadmap</a>
+    <a href="vega.html" aria-current="page">Vega</a>
+    <a href="https://github.com/aire-protocol">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero">
+  <h1>AIRE &amp; Vega.</h1>
+  <p class="lede">AIRE is an open protocol. Vega is one runtime that happens to speak it. Most people will use AIRE without ever touching Vega.</p>
+</section>
+
+<section>
+  <h2>The short version</h2>
+  <ul>
+    <li><strong>AIRE</strong> is an open wire protocol. Apache 2.0. BDFL-governed today, headed for a neutral foundation.</li>
+    <li><strong>Vega</strong> is an OTP-style agent runtime in Go — supervision trees, restart strategies, fault classification. Think Erlang's BEAM, but for AI agents.</li>
+    <li><strong>AIRE is to Vega what POSIX is to Linux</strong> — a standard the runtime implements, not a thing the runtime owns.</li>
+  </ul>
+  <p>You can implement AIRE in any language, run it from any process, and interoperate with anyone else who speaks the spec. Vega is one canonical user — not the only one.</p>
+</section>
+
+<section>
+  <h2>The pattern</h2>
+  <p>This is a well-worn pattern. Successful protocols come paired with an opinionated reference implementation that proves the spec is real — and a clear separation between the standard and the runtime.</p>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Standard</th><th>Reference runtime</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>POSIX</td><td>Linux</td></tr>
+      <tr><td>OCI</td><td>Docker</td></tr>
+      <tr><td>HCL</td><td>Terraform</td></tr>
+      <tr class="highlight"><td><strong>AIRE</strong></td><td><strong>Vega</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>The standard is the durable thing. The reference runtime proves the standard is real.</p>
+</section>
+
+<section>
+  <h2>What lives in AIRE</h2>
+  <ul>
+    <li>Wire format (frame envelope, encoding rules)</li>
+    <li>Frame types: <code>HELLO</code>, <code>CAPABILITY</code>, <code>INVOKE</code>, <code>STREAM</code>, <code>CANCEL</code>, <code>BUDGET</code>, <code>DELEGATE</code>, <code>ERROR</code>, <code>GOODBYE</code></li>
+    <li>Handshake and capability negotiation</li>
+    <li>Identity model — DID-bound, signed, per-stream</li>
+    <li>Cancellation, budget, and resumability semantics</li>
+    <li>URI scheme (<code>aire://</code>)</li>
+  </ul>
+  <p>Nothing in AIRE references Vega. The spec has no normative reliance on any specific implementation.</p>
+</section>
+
+<section>
+  <h2>What Vega adds on top</h2>
+  <p>Vega is an agent runtime. It supervises agent processes (supervision trees, restart strategies, fault classification), provides a YAML DSL for non-programmers, persists state, and integrates with LLM backends. AIRE is the wire on which a Vega cluster's distribution travels — the "how do agents on different hosts talk to each other?" layer.</p>
+  <p>If you've used Erlang/OTP, the analogy is exact: <strong>AIRE is the Erlang Distribution Protocol; Vega is OTP.</strong> Independently useful. Exponentially more useful together. Neither owns the other.</p>
+</section>
+
+<section>
+  <h2>The decoupling rules</h2>
+  <p>To keep this honest, the AIRE codebase enforces hard separation:</p>
+  <ul>
+    <li><strong>No Vega imports in <code>aire-go</code>.</strong> The Go reference implementation has zero dependencies on any agent runtime. Verifiable with <code>go mod graph</code>.</li>
+    <li><strong>No Vega in normative spec text.</strong> Vega may appear only as a non-normative example, the way Linux might appear in a POSIX comparison.</li>
+    <li><strong>Vega is one of N implementations.</strong> Anyone can write an AIRE runtime that looks nothing like Vega. The protocol must support that.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>What this means for you</h2>
+  <div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>You are…</th><th>What AIRE is to you</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>A developer not using Vega</td><td>A QUIC-native protocol you can implement against the spec</td></tr>
+      <tr><td>A Vega user</td><td>The wire protocol that lets Vega processes on different hosts talk to each other</td></tr>
+      <tr><td>Building an agent framework in Python / TypeScript / Rust</td><td>A standard you can ship a client for; <code>aire-go</code> is a reference, not a constraint</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Using AIRE without Vega</h2>
+  <p>You don't need Vega. You need:</p>
+  <ul>
+    <li>The spec — <a href="https://github.com/aire-protocol/aire-spec">github.com/aire-protocol/aire-spec</a></li>
+    <li>An implementation — <a href="https://github.com/aire-protocol/aire-go">aire-go</a> if you're in Go, or write your own in any language</li>
+    <li>A QUIC library in your language (Go: <code>quic-go</code>; Rust: <code>quinn</code>; Python: <code>aioquic</code>; etc.)</li>
+  </ul>
+  <p>That's it.</p>
+</section>
+
+</main>
+
+<footer>
+  <p>AIRE is open-source under <a href="https://github.com/aire-protocol/aire-spec/blob/main/LICENSE">Apache 2.0</a>.</p>
+  <p class="dim">aire.fyi</p>
+</footer>
+
+</body>
+</html>
