@@ -35,9 +35,9 @@
   <h1>The QUIC-native agent protocol.</h1>
   <p class="lede">AIRE — Agent Interchange Runtime Envelope — is a wire protocol for agent-to-agent communication. Open spec. Apache 2.0. Built for migration, multiplexed fan-out, semantic cancellation, and budget-aware backpressure.</p>
   <div class="meta">
-    <span>Status: draft v0.1</span>
+    <span>Spec: draft, v0.1 shipped</span>
     <span>License: Apache 2.0</span>
-    <span>Reference impl: Go · v0.1 working</span>
+    <span>Reference impl: Go · v0.1 conformant</span>
   </div>
 </section>
 
@@ -71,10 +71,10 @@
     <dd>Typed agent verbs: <code>HELLO</code>, <code>CAPABILITY</code>, <code>INVOKE</code>, <code>STREAM</code>, <code>CANCEL</code>, <code>BUDGET</code>, <code>DELEGATE</code>, <code>ERROR</code>, <code>GOODBYE</code>.</dd>
 
     <dt>Identity</dt>
-    <dd>DID-based, signed, bound to streams — not connections. One connection can carry operations on behalf of many distinct agent identities.</dd>
+    <dd>DID-based, bound to streams — not connections. One connection can carry operations on behalf of many distinct agent identities. v0.2 mandates support for <code>did:web</code> (DNS-rooted) and <code>did:key</code> (ephemeral, self-asserted); other methods are pluggable.</dd>
 
     <dt>Addressing</dt>
-    <dd><code>aire://node-id/agent-id/operation</code></dd>
+    <dd><code>aire://host[:port]/agent-id/operation</code>. Default port <code>4433/udp</code>. Human-readable handles take the form <code>agent@domain</code> and resolve off-wire to a DID via DNS TXT or HTTPS well-known, then to endpoints via an <code>AIREv1</code> service entry in the DID Document — with mandatory bidirectional binding to prevent impersonation.</dd>
 
     <dt>Backpressure</dt>
     <dd>Semantic. Tokens and dollars are first-class flow-control units, not bytes.</dd>
@@ -115,8 +115,8 @@
 <section id="roadmap">
   <h2>Roadmap</h2>
   <ol class="roadmap">
-    <li><strong>v0.1</strong> — frame types, handshake, basic semantics</li>
-    <li><strong>v0.2</strong> — capability negotiation, identity model</li>
+    <li><strong>v0.1</strong> — wire format, handshake, URI scheme, conformance vectors <em>(shipped — spec §§2/3/4/6 merged; Go reference impl green against the vectors with a two-node cancel-mid-stream demo)</em></li>
+    <li><strong>v0.2</strong> — identity model, capability negotiation, discovery <em>(in progress — DID identity (did:web, did:key), AIREv1 service entry, and handle resolution landed; capability semantics and per-frame signing still open)</em></li>
     <li><strong>v0.3</strong> — budget / cancel / delegate semantics</li>
     <li><strong>v0.4</strong> — resumability, multipath</li>
     <li><strong>v1.0</strong> — frozen wire format, foundation donation</li>
@@ -132,8 +132,8 @@
   <h2>Get involved</h2>
   <ul class="links">
     <li><a href="https://github.com/aire-protocol/aire-spec">Spec repository</a> — read the draft, file issues, send PRs</li>
-    <li><a href="https://github.com/aire-protocol/aire-go">Go reference implementation</a></li>
-    <li><a href="https://github.com/aire-protocol/aire-spec/blob/main/SPEC.md">Latest spec draft</a></li>
+    <li><a href="https://github.com/aire-protocol/aire-go">Go reference implementation</a> — passes the v0.1 conformance vectors; <code>go run ./cmd/aire-demo</code> runs the two-node cancel-mid-stream demo</li>
+    <li><a href="https://github.com/aire-protocol/aire-spec/blob/main/SPEC.md">Latest spec draft</a> · <a href="https://github.com/aire-protocol/aire-spec/blob/main/vectors/v0.1.json">v0.1 wire-format vectors</a></li>
   </ul>
 </section>
 
