@@ -8,11 +8,11 @@
 
 <meta property="og:type" content="website">
 <meta property="og:title" content="AIRE — the QUIC-native agent protocol">
-<meta property="og:description" content="A wire protocol for agent-to-agent communication. Built for migration, multiplexed fan-out, semantic cancellation, and budget-aware backpressure.">
+<meta property="og:description" content="A wire protocol for agent-to-agent communication. DID-signed identity, semantic cancellation, token / cost / deadline backpressure, resumable operations, multiplexed fan-out without head-of-line blocking.">
 <meta property="og:url" content="https://aire.fyi">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AIRE — the QUIC-native agent protocol">
-<meta name="twitter:description" content="A wire protocol for agent-to-agent communication. Built for migration, multiplexed fan-out, semantic cancellation, and budget-aware backpressure.">
+<meta name="twitter:description" content="A wire protocol for agent-to-agent communication. DID-signed identity, semantic cancellation, token / cost / deadline backpressure, resumable operations, multiplexed fan-out without head-of-line blocking.">
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -68,7 +68,7 @@
     <dd>QUIC (RFC 9000). Connection-ID-based migration, multiplexed streams, 0-RTT, built-in TLS, escapes middlebox ossification.</dd>
 
     <dt>Frames</dt>
-    <dd>Typed agent verbs: <code>HELLO</code>, <code>INVOKE</code>, <code>STREAM</code>, <code>CANCEL</code>, <code>BUDGET</code>, <code>DELEGATE</code>, <code>ERROR</code>, <code>GOODBYE</code>.</dd>
+    <dd>Typed agent verbs: <code>HELLO</code>, <code>INVOKE</code>, <code>STREAM</code>, <code>CANCEL</code>, <code>BUDGET</code>, <code>DELEGATE</code>, <code>RESUMABLE</code>, <code>RESUME</code>, <code>ERROR</code>, <code>GOODBYE</code>.</dd>
 
     <dt>Identity</dt>
     <dd>DID-based, bound to streams — not connections. One connection can carry operations on behalf of many distinct agent identities. v0.2 mandates support for <code>did:web</code> (DNS-rooted) and <code>did:key</code> (ephemeral, self-asserted); other methods are pluggable. HELLO frames are signed with Ed25519, with nonce + timestamp replay protection.</dd>
@@ -77,13 +77,13 @@
     <dd><code>aire://host[:port]/agent-id/operation</code>. Default port <code>4433/udp</code>. Human-readable handles take the form <code>agent@domain</code> and resolve off-wire to a DID via DNS TXT or HTTPS well-known, then to endpoints via an <code>AIREv1</code> service entry in the DID Document — with mandatory bidirectional binding to prevent impersonation.</dd>
 
     <dt>Backpressure</dt>
-    <dd>Semantic. Tokens and dollars are first-class flow-control units, not bytes.</dd>
+    <dd>Semantic. <code>BUDGET</code> frames carry tokens, micro-units of currency (ISO 4217), and an absolute deadline as a TLV payload. Either peer may issue updates; latest snapshot wins. Exhaustion produces a typed <code>BUDGET_EXCEEDED</code> error.</dd>
 
     <dt>Cancellation</dt>
-    <dd>Per-operation, propagating to delegated sub-calls.</dd>
+    <dd>Per-operation. <code>CANCEL</code> carries a reason code (user, deadline, budget, upstream, resource, internal) and optional UTF-8 detail. When an operation has been delegated, cancellation propagates downstream with reason <code>UPSTREAM_CANCELLED</code>, transitively along the delegation chain.</dd>
 
     <dt>Resumability</dt>
-    <dd>Logical-operation resume across new connections.</dd>
+    <dd>Server issues an opaque <code>RESUMABLE</code> token with a TTL during an operation; on connection loss, the client dials fresh, completes the handshake, and sends <code>RESUME</code> with the token plus its last-received sequence number. Server picks up at the next frame. At-least-once by default; cross-node resumption is implementation-defined.</dd>
   </dl>
 </section>
 
