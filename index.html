@@ -35,7 +35,7 @@
   <h1>The QUIC-native agent protocol.</h1>
   <p class="lede">AIRE — Agent Interchange Runtime Envelope — is a wire protocol for agent-to-agent communication. Open spec. Apache 2.0. Built for migration, multiplexed fan-out, semantic cancellation, and budget-aware backpressure.</p>
   <div class="meta">
-    <span>Spec: draft, v0.2 shipped</span>
+    <span>Spec: draft v0.4 (all milestones shipped)</span>
     <span>License: Apache 2.0</span>
     <span>Reference impl: Go · v0.2 conformant</span>
   </div>
@@ -117,8 +117,8 @@
   <ol class="roadmap">
     <li><strong>v0.1</strong> — wire format, handshake, URI scheme, conformance vectors <em>(shipped — spec §§2/3/4/6 merged; Go reference impl green against the vectors with a two-node cancel-mid-stream demo)</em></li>
     <li><strong>v0.2</strong> — identity model, capability negotiation, discovery <em>(shipped — DID identity (did:web, did:key), AIREv1 service entry, handle resolution, capability negotiation semantics, and Ed25519 HELLO signing with replay protection)</em></li>
-    <li><strong>v0.3</strong> — budget / cancel / delegate semantics</li>
-    <li><strong>v0.4</strong> — resumability, multipath</li>
+    <li><strong>v0.3</strong> — budget / cancel / delegate semantics <em>(spec shipped — CANCEL frame with reason codes, DELEGATE propagation rules, BUDGET TLV with tokens / cost / currency / deadline)</em></li>
+    <li><strong>v0.4</strong> — resumability, multipath <em>(spec shipped — RESUMABLE / RESUME frames, opaque tokens with TTL, sequence-number-based at-least-once delivery; multipath deferred)</em></li>
     <li><strong>v1.0</strong> — frozen wire format, foundation donation</li>
   </ol>
 </section>
@@ -133,7 +133,7 @@
   <ul class="links">
     <li><a href="https://github.com/aire-protocol/aire-spec">Spec repository</a> — read the draft, file issues, send PRs</li>
     <li><a href="https://github.com/aire-protocol/aire-go">Go reference implementation</a> — passes v0.1 + v0.2 conformance vectors; <code>go run ./cmd/aire-demo</code> runs the two-node cancel-mid-stream demo, <code>go run ./cmd/aire-peers</code> runs an A→B delegation/fan-out demo</li>
-    <li><a href="https://github.com/aire-protocol/aire-spec/blob/main/SPEC.md">Latest spec draft</a> · <a href="https://github.com/aire-protocol/aire-spec/blob/main/vectors/v0.1.json">v0.1 wire-format vectors</a> · <a href="https://github.com/aire-protocol/aire-spec/blob/main/vectors/v0.2.json">v0.2 signed-HELLO vector</a></li>
+    <li><a href="https://github.com/aire-protocol/aire-spec/blob/main/SPEC.md">Latest spec draft</a> · conformance vectors: <a href="https://github.com/aire-protocol/aire-spec/blob/main/vectors/v0.1.json">v0.1</a> · <a href="https://github.com/aire-protocol/aire-spec/blob/main/vectors/v0.2.json">v0.2</a> · <a href="https://github.com/aire-protocol/aire-spec/blob/main/vectors/v0.3.json">v0.3</a> · <a href="https://github.com/aire-protocol/aire-spec/blob/main/vectors/v0.4.json">v0.4</a></li>
   </ul>
 </section>
 
